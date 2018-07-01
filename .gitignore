@@ -1,0 +1,8 @@
+*.pyc
+/logs/
+.idea/
+.project
+.pydevproject
+*.sublime-*
+.venv/
+.venv*/
