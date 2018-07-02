@@ -3,10 +3,38 @@ Zabbix Helpers To Fetch Mikrotik's Counters via API
 
 These scripts rely on [PyPi librouteros library].
 
-## Tuning up Zabbix
+## Installation
+
+In the example below we use a template which monitors the single Mikrotik Node. If you want to minitor several Mikrotiks 
+from a single zabbix_agent - you can fetch the concept and clone the items for several Mikrotiks.
+
+The concept is:
+1. We define **mikrotik.api.discovery** item (manually or using the template) on the node with `zabbix_agentd` available. 
+  The item accepts a couple of parameters
+2. We define **mikrotik.api.discovery** in `zabbix_agentd` configuration file
+3. Zabbix Server pokes for **mikrotik.api.discovery**. The item's first parameter is **another** host name  of Mikrotik 
+  we want to monitor. Mikrotik does not have zabbix_agentd inside, right?
+4. Poking **mikrotik.api.discovery** spawns the execution of `zabbix.py` which returns some data. This bunch of data get
+  forwarded to `zabbix_sender`
+5. A lot of other items defined via Zabbix Template as **Zabbix Trapper** items. So they are being collected during the 
+  previous step and pushed into the server with `zabbix_sender`.
+
+### Creating the user in Mikrotik
+You need to create an separate group. Go to *System* - *Users* and create the new group:
+* **Name**: `api_read`
+* **Policies**:
+  * `test`
+  * `api`
+  * `read`
+  * `winbox`
+
+Create a user and put it into `api_read` group.
+
+### Tuning up Zabbix
 
 There is a Zabbix Template **Template Mikrotik API Poke**. It contains few macroses which you need probably to re-apply
 when attach it to your host:
+- **{$MTIK_HOSTNAME}** (default: `Mikrotik`) - the host name in Zabbix inventory to assign values to.
 - **{$MTIK_API_HOST}** (default: `192.168.0.1`) - the IP address API listens to
 - **{$MTIK_API_USER}** (default: `admin`) - the api user name. *read* permissions for the user is OK to start.
 - **{$MTIK_API_PASSWORD}** (default: `admin`) - the API password
@@ -16,7 +44,7 @@ when attach it to your host:
     * `-s`: Use SSL when do API call. The Certificate verification is disabled.
     * `-P PLUGINS`: the directory with the plugins to use related to the directory where `zabbix.py` is located.
 
-## Installation on Zabbix Server
+### Installation on Zabbix Server
 
 The code uses Python 2. All the dependencies are listed in [requirements.txt](requirements.txt) file.
 Very likely you will use *Virtualenv* for the installation. I used `/etc/zabbix/.venv` as a viartualenv directory.
