@@ -81,13 +81,20 @@ The next templates are available:
 
 ### Installation on Zabbix Server
 
-The code uses Python 2. All the dependencies are listed in [requirements.txt](requirements.txt) file.
+The code uses Python 2 (tested in 2.7.13). All the dependencies are listed in [requirements.txt](requirements.txt) file.
 Very likely you will use *Virtualenv* for the installation. I used `/etc/zabbix/.venv` as a viartualenv directory.
 
 As usual, everything which is in `/etc/zabbix/zabbix_agentd.d` gets included by `zabbix_agentd`. Put or symlink 
 [userparameter_mikrotik_getdata.conf](zabbix_agentd.d/userparameter_mikrotik_getdata.conf) to something in 
 `/etc/zabbix/zabbix_agentd.d` in order to start.
 
+#### Known Issues
+*  It doesn't work on Python 2.7.6 which is in Ubuntu 14.04 LTS. As a solution was to take an idea in 
+    [this article][Upgrade to Python 2.7.11 on Ubuntu], compile Python 2.7.13 and create the `virtualenv`. 
+    Also, these commands had been used in virtualenv as well:
+    
+        pip install -U setuptools
+        pip install -U pip
 
 ## Hints
 
@@ -124,7 +131,7 @@ Read the values from STDIN:
         --input-file -
 
 ---
-
+[Upgrade to Python 2.7.11 on Ubuntu]: http://mbless.de/blog/2016/01/09/upgrade-to-python-2711-on-ubuntu-1404-lts.html
 [PyPi librouteros library]: https://pypi.org/project/librouteros/
 
 [ciscoBgpPeerState value maps]: zabbix_templates/zbx_valuemaps_bgp_status.xml
