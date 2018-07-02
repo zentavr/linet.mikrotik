@@ -28,7 +28,12 @@ def main():
     }
 
     if args.use_ssl:
-        ssl_ctx = ssl.create_default_context()
+        try:
+            ssl_ctx = ssl.create_default_context()
+        except AttributeError:
+            # ssl.create_default_context() is not available in Ubuntu 14.04 (Python 2.7.6), so lets try this hack.
+            ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+
         ssl_ctx.check_hostname = False
         ssl_ctx.verify_mode = ssl.CERT_NONE
 
