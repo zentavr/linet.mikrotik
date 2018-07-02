@@ -10,25 +10,25 @@ from a single zabbix_agent - you can fetch the concept and clone the items for s
 
 The concept is:
 
-1. We define **mikrotik.api.discovery** item (manually or using the template) on the node with `zabbix_agentd` available. 
+1.  We define **mikrotik.api.discovery** item (manually or using the template) on the node with `zabbix_agentd` available. 
   The item accepts a couple of parameters
-2. We define **mikrotik.api.discovery** in `zabbix_agentd` configuration file
-3. Zabbix Server pokes for **mikrotik.api.discovery**. The item's first parameter is **another** host name  of Mikrotik 
+2.  We define **mikrotik.api.discovery** in `zabbix_agentd` configuration file
+3.  Zabbix Server pokes for **mikrotik.api.discovery**. The item's first parameter is **another** host name  of Mikrotik 
   we want to monitor. Mikrotik does not have zabbix_agentd inside, right?
-4. Poking **mikrotik.api.discovery** spawns the execution of `zabbix.py` which returns some data. This bunch of data get
+4.  Poking **mikrotik.api.discovery** spawns the execution of `zabbix.py` which returns some data. This bunch of data get
   forwarded to `zabbix_sender`
-5. A lot of other items defined via Zabbix Template as **Zabbix Trapper** items. So they are being collected during the 
+5.  A lot of other items defined via Zabbix Template as **Zabbix Trapper** items. So they are being collected during the 
   previous step and pushed into the server with `zabbix_sender`.
 
 ### Creating the user in Mikrotik
 You need to create an separate group. Go to *System* - *Users* and create the new group:
 
-* **Name**: `api_read`
-* **Policies**:
-  * `test`
-  * `api`
-  * `read`
-  * `winbox`
+*  **Name**: `api_read`
+*  **Policies**:
+    *  `test`
+    *  `api`
+    *  `read`
+    *  `winbox`
 
 Create a user and put it into `api_read` group.
 
@@ -39,45 +39,45 @@ Tested with Zabbix 3.2.
 There is a Zabbix Template **Template Mikrotik API Poke**. It contains few macroses which you need probably to re-apply
 when attach it to your host:
 
-- **{$MTIK_HOSTNAME}** (default: `Mikrotik`) - the host name in Zabbix inventory to assign values to.
-- **{$MTIK_API_HOST}** (default: `192.168.0.1`) - the IP address API listens to
-- **{$MTIK_API_USER}** (default: `admin`) - the api user name. *read* permissions for the user is OK to start.
-- **{$MTIK_API_PASSWORD}** (default: `admin`) - the API password
-- **{$MTIK_API_SCRIPT_PARAMS}** (default: `-t`) - the additional parameters you want to pass to `zabbix.py` script.
-  Separate with spaces. Probably the most interesting are:
-    * `-t`: Use timestamps when sending the values
-    * `-s`: Use SSL when do API call. The Certificate verification is disabled.
-    * `-P PLUGINS`: the directory with the plugins to use related to the directory where `zabbix.py` is located.
+-  **{$MTIK_HOSTNAME}** (default: `Mikrotik`) - the host name in Zabbix inventory to assign values to.
+-  **{$MTIK_API_HOST}** (default: `192.168.0.1`) - the IP address API listens to
+-  **{$MTIK_API_USER}** (default: `admin`) - the api user name. *read* permissions for the user is OK to start.
+-  **{$MTIK_API_PASSWORD}** (default: `admin`) - the API password
+-  **{$MTIK_API_SCRIPT_PARAMS}** (default: `-t`) - the additional parameters you want to pass to `zabbix.py` script.
+   Separate with spaces. Probably the most interesting are:
+    *  `-t`: Use timestamps when sending the values
+    *  `-s`: Use SSL when do API call. The Certificate verification is disabled.
+    *  `-P PLUGINS`: the directory with the plugins to use related to the directory where `zabbix.py` is located.
 
 
 Before importing any templates you need to import Value Maps (Administration - General - Value Maps):
 
-* **ciscoBgpPeerState** can be found [here][ciscoBgpPeerState value maps]
-* **Mikrotik BGP Administrative Status** can be found [here][Mikrotik BGP Administrative Status value maps]
+*  **ciscoBgpPeerState** can be found [here][ciscoBgpPeerState value maps]
+*  **Mikrotik BGP Administrative Status** can be found [here][Mikrotik BGP Administrative Status value maps]
 
 The next templates are available:
 
-* **Template Mikrotik API Poke** - defines 2 items which Zabbix server pokes to (user parameters defined in zabbix_agent
-  config). While it happens, the execution of `zabbix.py` happens - it pokes for values using Mikrotik API and 
-  forwarding the results through `zabbix_sender` happens.
-  
-  The [template][Template Mikrotik API Poke] should be attached to the host where zabbix_sender and Python is installed.
-  Also, the macroses should be defined (see above).
+*  **Template Mikrotik API Poke** - defines 2 items which Zabbix server pokes to (user parameters defined in zabbix_agent
+   config). While it happens, the execution of `zabbix.py` happens - it pokes for values using Mikrotik API and 
+   forwarding the results through `zabbix_sender` happens.
+   
+   The [template][Template Mikrotik API Poke] should be attached to the host where zabbix_sender and Python is installed.
+   Also, the macroses should be defined (see above).
 
-* **Template Mikrotik BGPv4** - is being used for BGP Peers Monitoring. It discovers for the peers using low level 
-  discovery, assigns items and triggers for the peer and also builds a couple of charts.
-  
-  The [template][Template Mikrotik BGPv4] should be attached to the Mikrotik node.
-  Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. The default is 
-  `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* items.
+*  **Template Mikrotik BGPv4** - is being used for BGP Peers Monitoring. It discovers for the peers using low level 
+   discovery, assigns items and triggers for the peer and also builds a couple of charts.
+   
+   The [template][Template Mikrotik BGPv4] should be attached to the Mikrotik node.
+   Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. The default is 
+   `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* items.
 
-* **Template Mikrotik Radius Counters** - is being used for RADIUS Client counters monitoring. It discovers the servers
-  defined in Mikrotik's settings and adds items and charts to them. It monitors RADIUS Incoming CoA counters as well. 
-  
-  The [template][Template Mikrotik Radius Counters] should be attached to 
-  the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
-  The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
-  items.
+*  **Template Mikrotik Radius Counters** - is being used for RADIUS Client counters monitoring. It discovers the servers
+   defined in Mikrotik's settings and adds items and charts to them. It monitors RADIUS Incoming CoA counters as well. 
+   
+   The [template][Template Mikrotik Radius Counters] should be attached to 
+   the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
+   The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
+   items.
 
 ### Installation on Zabbix Server
 
