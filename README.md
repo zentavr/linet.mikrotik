@@ -44,7 +44,7 @@ when attach it to your host:
 -  **{$MTIK_API_USER}** (default: `admin`) - the api user name. *read* permissions for the user is OK to start.
 -  **{$MTIK_API_PASSWORD}** (default: `admin`) - the API password
 -  **{$MTIK_API_SCRIPT_PARAMS}** (default: `-t`) - the additional parameters you want to pass to `zabbix.py` script.
-   Separate with spaces. Probably the most interesting are:
+    Separate with spaces. Probably the most interesting are:
     *  `-t`: Use timestamps when sending the values
     *  `-s`: Use SSL when do API call. The Certificate verification is disabled.
     *  `-P PLUGINS`: the directory with the plugins to use related to the directory where `zabbix.py` is located.
@@ -58,26 +58,26 @@ Before importing any templates you need to import Value Maps (Administration - G
 The next templates are available:
 
 *  **Template Mikrotik API Poke** - defines 2 items which Zabbix server pokes to (user parameters defined in zabbix_agent
-   config). While it happens, the execution of `zabbix.py` happens - it pokes for values using Mikrotik API and 
-   forwarding the results through `zabbix_sender` happens.
-   
-   The [template][Template Mikrotik API Poke] should be attached to the host where zabbix_sender and Python is installed.
-   Also, the macroses should be defined (see above).
+    config). While it happens, the execution of `zabbix.py` happens - it pokes for values using Mikrotik API and 
+    forwarding the results through `zabbix_sender` happens.
+    
+    The [template][Template Mikrotik API Poke] should be attached to the host where zabbix_sender and Python is installed.
+    Also, the macroses should be defined (see above).
 
 *  **Template Mikrotik BGPv4** - is being used for BGP Peers Monitoring. It discovers for the peers using low level 
-   discovery, assigns items and triggers for the peer and also builds a couple of charts.
-   
-   The [template][Template Mikrotik BGPv4] should be attached to the Mikrotik node.
-   Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. The default is 
-   `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* items.
+    discovery, assigns items and triggers for the peer and also builds a couple of charts.
+    
+    The [template][Template Mikrotik BGPv4] should be attached to the Mikrotik node.
+    Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. The default is 
+    `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* items.
 
 *  **Template Mikrotik Radius Counters** - is being used for RADIUS Client counters monitoring. It discovers the servers
-   defined in Mikrotik's settings and adds items and charts to them. It monitors RADIUS Incoming CoA counters as well. 
-   
-   The [template][Template Mikrotik Radius Counters] should be attached to 
-   the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
-   The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
-   items.
+    defined in Mikrotik's settings and adds items and charts to them. It monitors RADIUS Incoming CoA counters as well. 
+    
+    The [template][Template Mikrotik Radius Counters] should be attached to 
+    the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
+    The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
+    items.
 
 ### Installation on Zabbix Server
 
