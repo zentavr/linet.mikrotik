@@ -3,15 +3,25 @@
 This module pokes Mikrotik for Radius Servers
 """
 import json
+import time
 from string import strip
+from libs.strings import zabbix_escape
 
 
-def run(api):
+def run(api, ts=False):
     """
     Returns Radius LLD JSON
     :param api: initialized librouteros' connect()
+    :param ts: Use timestamps
     :return:
     """
+    if ts:
+        unixtime = " {time} ".format(
+            time=int(time.time())
+        )
+    else:
+        unixtime = " "
+
     radservers = api(cmd='/radius/print')
 
     servers = []
@@ -31,8 +41,9 @@ def run(api):
     }
 
     # Return JSON
-    print "{host} {key} {value}".format(
+    print "{host} {key}{unixtime}{value}".format(
         host='-',
         key='mikrotik.radius-out.discovery',
-        value=json.dumps(json_data)
+        unixtime=unixtime,
+        value=zabbix_escape(json.dumps(json_data))
     )

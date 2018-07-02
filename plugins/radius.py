@@ -2,17 +2,26 @@
 """
 This module pokes Mikrotik for Radius Counters
 """
-
+import time
 # import pprint
+
 from string import strip
+from libs.strings import zabbix_escape
 
 
-def run(api):
+def run(api, ts=False):
     """
     Returns Radius Counters
     :param api: initialized librouteros' connect()
+    :param ts: Use timestamps
     :return:
     """
+    if ts:
+        unixtime = " {time} ".format(
+            time=int(time.time())
+        )
+    else:
+        unixtime = " "
 
     # Fetch Incoming (CoA) stats
     # ({   u'acks': 263085, u'bad-requests': 0, u'naks': 11304, u'requests': 274388},)
@@ -20,31 +29,35 @@ def run(api):
 
     for coaitem in coastats:
         # Acknowledged
-        print "{host} {key} {value}".format(
+        print "{host} {key}{unixtime}{value}".format(
             host='-',
             key='mikrotik.radius-in.coa[acks]',
-            value=coaitem['acks']
+            unixtime=unixtime,
+            value=zabbix_escape(coaitem['acks'])
         )
 
         # Bad Requests
-        print "{host} {key} {value}".format(
+        print "{host} {key}{unixtime}{value}".format(
             host='-',
             key='mikrotik.radius-in.coa[bad-requests]',
-            value=coaitem['bad-requests']
+            unixtime=unixtime,
+            value=zabbix_escape(coaitem['bad-requests'])
         )
 
         # Rejects
-        print "{host} {key} {value}".format(
+        print "{host} {key}{unixtime}{value}".format(
             host='-',
             key='mikrotik.radius-in.coa[naks]',
-            value=coaitem['naks']
+            unixtime=unixtime,
+            value=zabbix_escape(coaitem['naks'])
         )
 
         # Requests
-        print "{host} {key} {value}".format(
+        print "{host} {key}{unixtime}{value}".format(
             host='-',
             key='mikrotik.radius-in.coa[requests]',
-            value=coaitem['requests']
+            unixtime=unixtime,
+            value=zabbix_escape(coaitem['requests'])
         )
 
     # We need to figure out which Radius settings do we have
@@ -61,57 +74,65 @@ def run(api):
 
         for item in stats:
             # Printing the comment
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',comment]',
-                value=server.get('comment', server.get('.id'))
+                unixtime=unixtime,
+                value=zabbix_escape(server.get('comment', server.get('.id')))
             )
 
             # Accepts
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',accepts]',
-                value=item.get('accepts')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('accepts'))
             )
 
             # Bad Replies
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',bad-replies]',
-                value=item.get('bad-replies')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('bad-replies'))
             )
 
             # pending
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',pending]',
-                value=item.get('pending')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('pending'))
             )
 
             # Rejects
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',rejects]',
-                value=item.get('rejects')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('rejects'))
             )
 
             # Requests
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',requests]',
-                value=item.get('requests')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('requests'))
             )
 
             # Resends
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',resends]',
-                value=item.get('resends')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('resends'))
             )
 
             # Timeouts
-            print "{host} {key} {value}".format(
+            print "{host} {key}{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',timeouts]',
-                value=item.get('timeouts')
+                unixtime=unixtime,
+                value=zabbix_escape(item.get('timeouts'))
             )

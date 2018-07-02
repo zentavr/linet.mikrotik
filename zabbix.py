@@ -15,6 +15,8 @@ def main():
     parser.add_argument('-u', '--user', default='admin', dest='username', help='API User.')
     parser.add_argument('-p', '--password', default='', dest='password', help='API Password.')
     parser.add_argument('-s', '--ssl', dest='use_ssl', action='store_true', help='Use SSL.')
+    parser.add_argument('-t', '--timestamps', dest='use_timestamps', action='store_true',
+                        help='Use unixtime timestamps.')
     parser.add_argument('-P', '--plugins', dest='plugins', default='plugins', help='The folder related to this file '
                                                                                    'where to seek for the plugins')
 
@@ -49,7 +51,7 @@ def main():
     modules = load_plugins(os.path.dirname(__file__), args.plugins)
     for m in modules:
         # pp.pprint(m)
-        m.run(api)
+        m.run(api, args.use_timestamps)
 
     # Closing Mikrotik's API Session
     api.close()
