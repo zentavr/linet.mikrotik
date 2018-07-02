@@ -19,7 +19,7 @@ when attach it to your host:
 ## Installation on Zabbix Server
 
 The code uses Python 2. All the dependencies are listed in [requirements.txt](requirements.txt) file.
-Very likely you will use *Virtualenv* for the installation.
+Very likely you will use *Virtualenv* for the installation. I used `/etc/zabbix/.venv` as a viartualenv directory.
 
 As usual, everything which is in `/etc/zabbix/zabbix_agentd.d` gets included by `zabbix_agentd`. Put or symlink 
 [userparameter_mikrotik_getdata.conf](zabbix_agentd.d/userparameter_mikrotik_getdata.conf) to something in 
