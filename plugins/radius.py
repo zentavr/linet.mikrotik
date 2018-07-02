@@ -74,12 +74,12 @@ def run(api, ts=False):
 
         for item in stats:
             # Printing the comment
-            print "{host} {key}{unixtime}{value}".format(
-                host='-',
-                key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',comment]',
-                unixtime=unixtime,
-                value=zabbix_escape(server.get('comment', server.get('.id')))
-            )
+            #print "{host} {key}{unixtime}{value}".format(
+            #    host='-',
+            #    key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',comment]',
+            #    unixtime=unixtime,
+            #    value=zabbix_escape(server.get('comment', server.get('.id')))
+            #)
 
             # Accepts
             print "{host} {key}{unixtime}{value}".format(
