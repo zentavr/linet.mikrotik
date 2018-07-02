@@ -28,16 +28,10 @@ def main():
     }
 
     if args.use_ssl:
-        try:
-            ssl_ctx = ssl.create_default_context()
-            ssl_ctx.check_hostname = False
-            ssl_ctx.verify_mode = ssl.CERT_NONE
-            ssl_wrapper = ssl_ctx.wrap_socket
-        except AttributeError:
-            # ssl.create_default_context() is not available in Ubuntu 14.04 (Python 2.7.6), so lets try this hack.
-            import socket
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            ssl_wrapper = ssl.wrap_socket(s, cert_reqs=ssl.CERT_NONE)
+        ssl_ctx = ssl.create_default_context()
+        ssl_ctx.check_hostname = False
+        ssl_ctx.verify_mode = ssl.CERT_NONE
+        ssl_wrapper = ssl_ctx.wrap_socket
 
         connect_args = {
             'port': 8729,
