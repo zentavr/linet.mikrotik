@@ -2,6 +2,15 @@ Zabbix Helpers To Fetch Mikrotik's Counters via API
 ---------------------------------------------------
 
 These scripts rely on [PyPi librouteros library].
+The reason is why this code was born is that Mikrotik's vendor does not hurry with implementing SNMP OIDs for the 
+certain interesting counters. When **Linet LTD** started to migrate to Mikrotiks - they missed an opportunity to monitor
+the health of their NAS in many ways like they did before.
+
+Currently we monitor the next:
+
+*  [radius.py](plugins/radius.py): Radius CoA counters: `/radius incoming monitor`
+*  [radius.py](plugins/radius.py): Radius Client counters: `/radius monitor`
+*  [bgp.py](plugins/bgp.py): BGP Peer Counters: `/routing bgp peer print status`
 
 ## Installation
 
