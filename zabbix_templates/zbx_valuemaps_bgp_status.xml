@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>3.2</version>
+    <date>2018-07-02T20:22:44Z</date>
+    <value_maps>
+        <value_map>
+            <name>ciscoBgpPeerState</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Weird</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Idle</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>Connect</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>Active</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>OpenSent</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>OpenConfirm</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>Established</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
+</zabbix_export>

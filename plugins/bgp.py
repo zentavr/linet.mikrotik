@@ -58,11 +58,26 @@ def run(api, ts=False):
         )
 
         # operational status
+        if bgpitem['state'] == "idle":
+            bgp_state = 1
+        elif bgpitem['state'] == "connect":
+            bgp_state = 2
+        elif bgpitem['state'] == "active":
+            bgp_state = 3
+        elif bgpitem['state'] == "opensent":
+            bgp_state = 4
+        elif bgpitem['state'] == "openconfirm":
+            bgp_state = 5
+        elif bgpitem['state'] == "established":
+            bgp_state = 6
+        else:
+            bgp_state = 0
+
         print "{host} {key}{unixtime}{value}".format(
             host='-',
             key='mikrotik.bgp.node[' + bgpitem['name'] + ',state]',
             unixtime=unixtime,
-            value=zabbix_escape(bgpitem['state'])
+            value=zabbix_escape(bgp_state)
         )
 
         # Printing the comment
