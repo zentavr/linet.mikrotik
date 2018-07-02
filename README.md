@@ -32,6 +32,8 @@ Create a user and put it into `api_read` group.
 
 ### Tuning up Zabbix
 
+Tested with Zabbix 3.2.
+
 There is a Zabbix Template **Template Mikrotik API Poke**. It contains few macroses which you need probably to re-apply
 when attach it to your host:
 - **{$MTIK_HOSTNAME}** (default: `Mikrotik`) - the host name in Zabbix inventory to assign values to.
@@ -44,6 +46,34 @@ when attach it to your host:
     * `-s`: Use SSL when do API call. The Certificate verification is disabled.
     * `-P PLUGINS`: the directory with the plugins to use related to the directory where `zabbix.py` is located.
 
+
+Before importing any templates you need to import Value Maps (Administration - General - Value Maps):
+* **ciscoBgpPeerState** can be found [here][ciscoBgpPeerState value maps]
+* **Mikrotik BGP Administrative Status** can be found [here][Mikrotik BGP Administrative Status value maps]
+
+The next templates are available:
+* **Template Mikrotik API Poke** - defines 2 items which Zabbix server pokes to (user parameters defined in zabbix_agent
+  config). While it happens, the execution of `zabbix.py` happens - it pokes for values using Mikrotik API and 
+  forwarding the results through `zabbix_sender` happens.
+  
+  The [template][Template Mikrotik API Poke] should be attached to the host where zabbix_sender and Python is installed.
+  Also, the macroses should be defined (see above).
+
+* **Template Mikrotik BGPv4** - is being used for BGP Peers Monitoring. It discovers for the peers using low level 
+  discovery, assigns items and triggers for the peer and also builds a couple of charts.
+  
+  The [template][Template Mikrotik BGPv4] should be attached to the Mikrotik node.
+  Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. The default is 
+  `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* items.
+
+* **Template Mikrotik Radius Counters** - is being used for RADIUS Client counters monitoring. It discovers the servers
+  defined in Mikrotik's settings and adds items and charts to them. It monitors RADIUS Incoming CoA counters as well. 
+  
+  The [template][Template Mikrotik Radius Counters] should be attached to 
+  the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
+  The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
+  items.
+
 ### Installation on Zabbix Server
 
 The code uses Python 2. All the dependencies are listed in [requirements.txt](requirements.txt) file.
@@ -53,17 +83,26 @@ As usual, everything which is in `/etc/zabbix/zabbix_agentd.d` gets included by 
 [userparameter_mikrotik_getdata.conf](zabbix_agentd.d/userparameter_mikrotik_getdata.conf) to something in 
 `/etc/zabbix/zabbix_agentd.d` in order to start.
 
-## Low Level Discovery
+
+## Hints
+
+### Low Level Discovery
+
+Low Level discovery plugins are in `lld_plugins` folder. Everything which is `*.py` (except `__*`) will be dynamically 
+included and `run()` with the parameters will be executed. 
 
     ./zabbix.py -H 192.168.0.1 -u apiuser -p apipassword -s -P lld_plugins 2>/dev/null
 
-## Fetch Counters
+### Fetch Counters
+
+The plugins which fetch the data using API calls are in `plugins` folder. Everything which is `*.py` (except `__*`) will
+be dynamically included and `run()` with the parameters will be executed. 
 
     ./zabbix.py -H 192.168.0.1 -u apiuser -p apipassword -s 2>/dev/null
 
-## Zabbix Sender Examples
+### Zabbix Sender Examples
 
-On the Zabbix server an item of type **Zabbix trapper** should be created with corresponding key. 
+On the Zabbix server an item of type **Zabbix trapper** should be created with corresponding key(s). 
 **Note** that incoming values will only be accepted from hosts specified in **Allowed hosts** field for this item.  
 
 Read the values from file:
@@ -82,3 +121,10 @@ Read the values from STDIN:
 ---
 
 [PyPi librouteros library]: https://pypi.org/project/librouteros/
+
+[ciscoBgpPeerState value maps]: zabbix_templates/zbx_valuemaps_bgp_status.xml
+[Mikrotik BGP Administrative Status value maps]: zabbix_templates/zbx_valuemaps_mtik_bgp_admin_status.xml
+
+[Template Mikrotik API Poke]: zabbix_templates/zbx_template_API_Poke.xml
+[Template Mikrotik BGPv4]: zabbix_templates/zbx_template_BGP.xml
+[Template Mikrotik Radius Counters]: zabbix_templates/zbx_template_Radius_Counters.xml
