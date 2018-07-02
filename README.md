@@ -9,6 +9,7 @@ In the example below we use a template which monitors the single Mikrotik Node. 
 from a single zabbix_agent - you can fetch the concept and clone the items for several Mikrotiks.
 
 The concept is:
+
 1. We define **mikrotik.api.discovery** item (manually or using the template) on the node with `zabbix_agentd` available. 
   The item accepts a couple of parameters
 2. We define **mikrotik.api.discovery** in `zabbix_agentd` configuration file
@@ -21,6 +22,7 @@ The concept is:
 
 ### Creating the user in Mikrotik
 You need to create an separate group. Go to *System* - *Users* and create the new group:
+
 * **Name**: `api_read`
 * **Policies**:
   * `test`
@@ -36,6 +38,7 @@ Tested with Zabbix 3.2.
 
 There is a Zabbix Template **Template Mikrotik API Poke**. It contains few macroses which you need probably to re-apply
 when attach it to your host:
+
 - **{$MTIK_HOSTNAME}** (default: `Mikrotik`) - the host name in Zabbix inventory to assign values to.
 - **{$MTIK_API_HOST}** (default: `192.168.0.1`) - the IP address API listens to
 - **{$MTIK_API_USER}** (default: `admin`) - the api user name. *read* permissions for the user is OK to start.
@@ -48,10 +51,12 @@ when attach it to your host:
 
 
 Before importing any templates you need to import Value Maps (Administration - General - Value Maps):
+
 * **ciscoBgpPeerState** can be found [here][ciscoBgpPeerState value maps]
 * **Mikrotik BGP Administrative Status** can be found [here][Mikrotik BGP Administrative Status value maps]
 
 The next templates are available:
+
 * **Template Mikrotik API Poke** - defines 2 items which Zabbix server pokes to (user parameters defined in zabbix_agent
   config). While it happens, the execution of `zabbix.py` happens - it pokes for values using Mikrotik API and 
   forwarding the results through `zabbix_sender` happens.
