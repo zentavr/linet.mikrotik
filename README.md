@@ -149,3 +149,5 @@ Read the values from STDIN:
 [Template Mikrotik API Poke]: zabbix_templates/zbx_template_API_Poke.xml
 [Template Mikrotik BGPv4]: zabbix_templates/zbx_template_BGP.xml
 [Template Mikrotik Radius Counters]: zabbix_templates/zbx_template_Radius_Counters.xml
+
+[Keeping in sync git repos]: https://moox.io/blog/keep-in-sync-git-repos-on-github-gitlab-bitbucket/
