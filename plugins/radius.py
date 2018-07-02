@@ -7,7 +7,7 @@ This module pokes Mikrotik for Radius Counters
 from string import strip
 
 
-def stats(api):
+def run(api):
     """
     Returns Radius Counters
     :param api: initialized librouteros' connect()

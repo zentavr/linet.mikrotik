@@ -3,18 +3,20 @@
 import argparse
 import ssl
 import os
-import pprint
+# import pprint
 
 from librouteros import connect
 from libs.loadplugins import load_plugins
 
 
 def main():
-    parser = argparse.ArgumentParser(description='BGP Stats Zabbix Helper')
+    parser = argparse.ArgumentParser(description='Zabbix Helper')
     parser.add_argument('-H', '--hostname', default='', dest='hostname', help='API Hostname.')
     parser.add_argument('-u', '--user', default='admin', dest='username', help='API User.')
     parser.add_argument('-p', '--password', default='', dest='password', help='API Password.')
     parser.add_argument('-s', '--ssl', dest='use_ssl', action='store_true', help='Use SSL.')
+    parser.add_argument('-P', '--plugins', dest='plugins', default='plugins', help='The folder related to this file '
+                                                                                   'where to seek for the plugins')
 
     args = parser.parse_args()
 
@@ -41,13 +43,13 @@ def main():
         **connect_args
     )
 
-    pp = pprint.PrettyPrinter(indent=4)
+    # pp = pprint.PrettyPrinter(indent=4)
 
     # Dynamically import the modules
-    modules = load_plugins(os.path.dirname(__file__))
+    modules = load_plugins(os.path.dirname(__file__), args.plugins)
     for m in modules:
-        pp.pprint(m)
-        m.stats(api)
+        # pp.pprint(m)
+        m.run(api)
 
     # Closing Mikrotik's API Session
     api.close()
