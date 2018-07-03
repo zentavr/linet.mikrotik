@@ -11,6 +11,7 @@ Currently we monitor the next:
 *  [radius.py](plugins/radius.py): Radius CoA counters: `/radius incoming monitor`
 *  [radius.py](plugins/radius.py): Radius Client counters: `/radius monitor`
 *  [bgp.py](plugins/bgp.py): BGP Peer Counters: `/routing bgp peer print status`
+*  [irq.py](plugins/irq.py): System IRQ Counters: ` /system resource irq print`
 
 ## Installation
 
@@ -81,9 +82,17 @@ The next templates are available:
     `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* items.
 
 *  **Template Mikrotik Radius Counters** - is being used for RADIUS Client counters monitoring. It discovers the servers
-    defined in Mikrotik's settings and adds items and charts to them. It monitors RADIUS Incoming CoA counters as well. 
+    defined in Mikrotik's settings and adds items and charts for them. It monitors RADIUS Incoming CoA counters as well. 
     
     The [template][Template Mikrotik Radius Counters] should be attached to 
+    the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
+    The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
+    items.
+
+*  **Template Mikrotik IRQ Counters** - is being used for System IRQ counters monitoring. It discovers the IRQs
+    available in Mikrotik's settings and adds items and charts for them.
+    
+    The [template][Template Mikrotik IRQ Counters] should be attached to 
     the Mikrotik node. Very likely, you need to edit an every single item and define/redefine `Allowed Hosts` value. 
     The default is `127.0.0.1`. This option tells Zabbix from which hosts it will accept the values for *Zabbix Trapper* 
     items.
@@ -149,5 +158,6 @@ Read the values from STDIN:
 [Template Mikrotik API Poke]: zabbix_templates/zbx_template_API_Poke.xml
 [Template Mikrotik BGPv4]: zabbix_templates/zbx_template_BGP.xml
 [Template Mikrotik Radius Counters]: zabbix_templates/zbx_template_Radius_Counters.xml
+[Template Mikrotik IRQ Counters]: zabbix_templates/zbx_template_IRQ_Counters.xml
 
 [Keeping in sync git repos]: https://moox.io/blog/keep-in-sync-git-repos-on-github-gitlab-bitbucket/
