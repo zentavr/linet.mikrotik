@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2018-07-03T17:46:04Z</date>
+    <date>2018-07-03T18:01:30Z</date>
     <groups>
         <group>
             <name>Custom Templates</name>
@@ -64,7 +64,7 @@
                     <description>Explores for the current IRQs</description>
                     <item_prototypes>
                         <item_prototype>
-                            <name>Syetem - Resources - IRQ {#IRQ}: Counter</name>
+                            <name>System - Resources - IRQ {#IRQ}: Counter</name>
                             <type>2</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
