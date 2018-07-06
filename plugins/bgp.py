@@ -27,7 +27,9 @@ def run(api, ts=False):
         # Remote AS for peer
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',remote-as]',
+            key='mikrotik.bgp.node[{name},remote-as]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem['remote-as'])
         )
@@ -35,7 +37,9 @@ def run(api, ts=False):
         # Accepted Prefixes
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',prefix-count]',
+            key='mikrotik.bgp.node[{name},prefix-count]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem['prefix-count'])
         )
@@ -43,7 +47,9 @@ def run(api, ts=False):
         # Administrative status
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',disabled]',
+            key='mikrotik.bgp.node[{name},disabled]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem['disabled'])
         )
@@ -51,7 +57,9 @@ def run(api, ts=False):
         # Established time for peer
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',uptime]',
+            key='mikrotik.bgp.node[{name},uptime]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             #value=bgpitem['uptime']
             value=zabbix_escape(time_convert(bgpitem['uptime']))
@@ -75,7 +83,9 @@ def run(api, ts=False):
 
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',state]',
+            key='mikrotik.bgp.node[{name},state]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgp_state)
         )
@@ -83,7 +93,9 @@ def run(api, ts=False):
         # Printing the comment
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',comment]',
+            key='mikrotik.bgp.node[{name},comment]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem.get('comment', ''))
         )
@@ -91,7 +103,9 @@ def run(api, ts=False):
         # Updates Received
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',updates-received]',
+            key='mikrotik.bgp.node[{name},updates-received]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem.get('updates-received'))
         )
@@ -99,7 +113,9 @@ def run(api, ts=False):
         # Updates Sent
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',updates-sent]',
+            key='mikrotik.bgp.node[{name},updates-sent]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem.get('updates-sent'))
         )
@@ -108,7 +124,9 @@ def run(api, ts=False):
         # Withdrawn Received
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',withdrawn-received]',
+            key='mikrotik.bgp.node[{name},withdrawn-received]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem.get('withdrawn-received'))
         )
@@ -116,7 +134,9 @@ def run(api, ts=False):
         # Withdrawn Sent
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node[' + bgpitem['name'] + ',withdrawn-sent]',
+            key='mikrotik.bgp.node[{name},withdrawn-sent]'.format(
+                name=bgpitem['name']
+            ),
             unixtime=unixtime,
             value=zabbix_escape(bgpitem.get('withdrawn-sent'))
         )
