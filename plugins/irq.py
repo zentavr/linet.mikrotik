@@ -25,7 +25,7 @@ def run(api, ts=False):
     for irqitem in irqstats:
         print "{host} {key}{unixtime}{value}".format(
             host='-',
-            key='mikrotik.irq[' + irqitem.get('users').replace(",", "__") + ']',
+            key='mikrotik.irq["' + irqitem.get('users').replace(",", "__") + '"]',
             unixtime=unixtime,
             value=zabbix_escape(irqitem['count'])
         )
