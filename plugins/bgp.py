@@ -38,9 +38,9 @@ def run(api, ts=False):
 
     for bgpitem in bgpstats:
         for val in values_to_monitor:
-            print "{host} {key}{unixtime}{value}".format(
+            print "{host} \"{key}\"{unixtime}{value}".format(
                 host='-',
-                key='mikrotik.bgp.node["{name}","{val}"]'.format(
+                key='mikrotik.bgp.node[{name},{val}]'.format(
                     name=bgpitem['name'],
                     val=val
                 ),
@@ -64,9 +64,9 @@ def run(api, ts=False):
         else:
             bgp_state = 0
 
-        print "{host} {key}{unixtime}{value}".format(
+        print "{host} \"{key}\"{unixtime}{value}".format(
             host='-',
-            key='mikrotik.bgp.node["{name}","state"]'.format(
+            key='mikrotik.bgp.node[{name},state]'.format(
                 name=bgpitem['name']
             ),
             unixtime=unixtime,

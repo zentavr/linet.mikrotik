@@ -37,7 +37,7 @@ def run(api, ts=False):
 
     for coaitem in coastats:
         for val in coa_values_to_monitor:
-            print "{host} {key}{unixtime}{value}".format(
+            print "{host} \"{key}\"{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-in.coa[{val}]'.format(
                     val=val
@@ -71,7 +71,7 @@ def run(api, ts=False):
 
         for item in stats:
             for val in radius_values_to_monitor:
-                print "{host} {key}{unixtime}{value}".format(
+                print "{host} \"{key}\"{unixtime}{value}".format(
                     host='-',
                     key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',' + val + ']',
                     unixtime=unixtime,
