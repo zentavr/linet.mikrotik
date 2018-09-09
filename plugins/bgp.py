@@ -28,7 +28,7 @@ def run(api, ts=False):
         'remote-as',           # Remote AS for peer
         'prefix-count',        # Accepted Prefixes
         'disabled',            # Administrative status
-        'uptime',              # Established time for peer
+        # 'uptime',              # Established time for peer
         'comment',             # Printing the comment
         'updates-received',    # Updates Received
         'updates-sent',        # Updates Sent
@@ -71,4 +71,15 @@ def run(api, ts=False):
             ),
             unixtime=unixtime,
             value=zabbix_escape(bgp_state)
+        )
+
+        # Established time for peer
+        print "{host} \"{key}\"{unixtime}{value}".format(
+            host='-',
+            key='mikrotik.bgp.node[{name},uptime]'.format(
+                name=bgpitem['name']
+            ),
+            unixtime=unixtime,
+            #value=bgpitem['uptime']
+            value=zabbix_escape(time_convert(bgpitem['uptime']))
         )
