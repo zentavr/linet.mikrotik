@@ -10,6 +10,8 @@ Changelog
 * Using `logging` library. `-v` up to `-vvvv` sets up the logging.
 * Added `--encoding` parameter, where you can specify the encoding. Like `ASCII`, `UTF-8` or something else (`ASCII` is the default)
 * Fixing an issue when app got crashed if BGP peer had been disabled manually
+* Adding the module which allows to track firewall counters. The rule's comment must start with `ZBX` keyword, or the rule is skipped otherwise.
+
 
 ---
 [LibrouterOS: New Auth Method]: https://librouteros.readthedocs.io/en/latest/usage.html#new-auth-method
