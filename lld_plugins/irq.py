@@ -5,9 +5,10 @@ This module pokes Mikrotik for IRQ Peers
 import json
 import time
 from libs.strings import zabbix_escape
+from logging import getLogger
 
 
-def run(api, ts=False):
+def run(api, ts=False, log=getLogger(__name__)):
     """
     Returns IRQ LLD JSON
     :param api: initialized librouteros' connect()

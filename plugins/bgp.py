@@ -5,9 +5,10 @@ This module pokes Mikrotik for BGP Counters
 import time
 from libs.time import time_convert
 from libs.strings import zabbix_escape
+from logging import getLogger
 
 
-def run(api, ts=False):
+def run(api, ts=False, log=getLogger(__name__)):
     """
     Returns BGP Counters
     :param api: initialized librouteros' connect()
