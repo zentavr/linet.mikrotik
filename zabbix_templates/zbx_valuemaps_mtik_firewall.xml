@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>3.2</version>
+    <date>2019-06-30T17:48:54Z</date>
+    <value_maps>
+        <value_map>
+            <name>Mikrotik Firewall Rule Status</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>enabled</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>disabled</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
+</zabbix_export>
