@@ -3,15 +3,20 @@
 import argparse
 import ssl
 import os
+import logging
+from sys import stdout, stdin, stderr
 # import pprint
 
 from librouteros import connect
 from libs.loadplugins import load_plugins
+from librouteros.login import login_plain, login_token
 
 
 def main():
     parser = argparse.ArgumentParser(description='Zabbix Helper')
     parser.add_argument('-H', '--hostname', default='', dest='hostname', help='API Hostname.')
+    parser.add_argument('-e', '--encoding', default='ASCII', dest='encoding',
+                        help='The encoding to use during the connect')
     parser.add_argument('-u', '--user', default='admin', dest='username', help='API User.')
     parser.add_argument('-p', '--password', default='', dest='password', help='API Password.')
     parser.add_argument('-s', '--ssl', dest='use_ssl', action='store_true', help='Use SSL.')
@@ -19,11 +24,41 @@ def main():
                         help='Use unixtime timestamps.')
     parser.add_argument('-P', '--plugins', dest='plugins', default='plugins', help='The folder related to this file '
                                                                                    'where to seek for the plugins')
+    parser.add_argument('-m', '--login-method', dest='login_method', default='login_plain',
+                        choices=['login_plain', 'login_token'], help='Mikrotik login method to use. login_plain for '
+                        'fw>=6.43, login_token for fw<6.43.')
+    parser.add_argument("-v", "--verbosity", action="count", dest='verbosity', help="increase output verbosity")
 
     args = parser.parse_args()
 
+    # Setting up loglevels
+    liblog = logging.getLogger('librouteros')
+    applog = logging.getLogger('application')
+
+    console = logging.StreamHandler(stderr)
+    formatter = logging.Formatter(fmt='%(message)s')
+    console.setFormatter(formatter)
+
+    if args.verbosity == 1:
+        liblog.setLevel(logging.ERROR)
+        applog.setLevel(logging.ERROR)
+    elif args.verbosity == 2:
+        liblog.setLevel(logging.WARNING)
+        applog.setLevel(logging.WARNING)
+    elif args.verbosity == 3:
+        liblog.setLevel(logging.INFO)
+        applog.setLevel(logging.INFO)
+    elif args.verbosity > 3:
+        liblog.setLevel(logging.DEBUG)
+        applog.setLevel(logging.DEBUG)
+
+    # Set up librouteros logging
+    liblog.addHandler(console)
+    applog.addHandler(console)
+
     # Connection Arguments
     connect_args = {
+        'encoding': args.encoding,
         'port': 8728
     }
 
@@ -33,16 +68,19 @@ def main():
         ssl_ctx.verify_mode = ssl.CERT_NONE
         ssl_wrapper = ssl_ctx.wrap_socket
 
-        connect_args = {
-            'port': 8729,
-            'ssl_wrapper': ssl_wrapper
-        }
+        connect_args.update(port=8729)
+        connect_args.update(ssl_wrapper=ssl_wrapper)
+
+    # Dynamically init the class (we expect login_plain() or login_token() here)
+    method = globals()[args.login_method]
+    login_methods = (method, )
 
     # Connect to Mikrotik
     api = connect(
         username=args.username,
         password=args.password,
         host=args.hostname,
+        login_methods=login_methods,
         **connect_args
     )
 
@@ -52,7 +90,7 @@ def main():
     modules = load_plugins(os.path.dirname(__file__), args.plugins)
     for m in modules:
         # pp.pprint(m)
-        m.run(api, args.use_timestamps)
+        m.run(api, args.use_timestamps, applog)
 
     # Closing Mikrotik's API Session
     api.close()

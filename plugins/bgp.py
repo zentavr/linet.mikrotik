@@ -5,9 +5,10 @@ This module pokes Mikrotik for BGP Counters
 import time
 from libs.time import time_convert
 from libs.strings import zabbix_escape
+from logging import getLogger
 
 
-def run(api, ts=False):
+def run(api, ts=False, log=getLogger(__name__)):
     """
     Returns BGP Counters
     :param api: initialized librouteros' connect()
@@ -48,18 +49,21 @@ def run(api, ts=False):
                 value=zabbix_escape(bgpitem.get(val, 0))
             )
 
+        state = bgpitem.get('state', 'disabled')
+        uptime = bgpitem.get('uptime', '0s')
+
         # operational status
-        if bgpitem['state'] == "idle":
+        if state == "idle":
             bgp_state = 1
-        elif bgpitem['state'] == "connect":
+        elif state == "connect":
             bgp_state = 2
-        elif bgpitem['state'] == "active":
+        elif state == "active":
             bgp_state = 3
-        elif bgpitem['state'] == "opensent":
+        elif state == "opensent":
             bgp_state = 4
-        elif bgpitem['state'] == "openconfirm":
+        elif state == "openconfirm":
             bgp_state = 5
-        elif bgpitem['state'] == "established":
+        elif state == "established":
             bgp_state = 6
         else:
             bgp_state = 0
@@ -80,6 +84,6 @@ def run(api, ts=False):
                 name=bgpitem['name']
             ),
             unixtime=unixtime,
-            #value=bgpitem['uptime']
-            value=zabbix_escape(time_convert(bgpitem['uptime']))
+            # value=bgpitem['uptime']
+            value=zabbix_escape(time_convert(uptime))
         )

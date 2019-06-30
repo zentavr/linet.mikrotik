@@ -6,9 +6,10 @@ import json
 import time
 from string import strip
 from libs.strings import zabbix_escape
+from logging import getLogger
 
 
-def run(api, ts=False):
+def run(api, ts=False, log=getLogger(__name__)):
     """
     Returns Radius LLD JSON
     :param api: initialized librouteros' connect()

@@ -5,9 +5,12 @@ The idea and the code mainly had been found at https://copyninja.info/blog/dynam
 """
 
 import os
-import sys
 import re
 import importlib
+from logging import getLogger, NullHandler
+
+LOGGER = getLogger('application')
+LOGGER.addHandler(NullHandler())
 
 
 def load_plugins(p_root_dir=os.path.dirname(__file__), p_dir='plugins'):
@@ -30,7 +33,7 @@ def load_plugins(p_root_dir=os.path.dirname(__file__), p_dir='plugins'):
     modules = []
     for plugin in plugins:
         if not plugin.startswith('.__'):
-            sys.stderr.write('Loading ' + plugin + ' from ' + os.path.join(p_root_dir, p_dir) + '\n')
+            LOGGER.debug('Loading ' + plugin + ' from ' + os.path.join(p_root_dir, p_dir) + '\n')
             modules.append(importlib.import_module(plugin, package=p_dir))
 
     return modules
