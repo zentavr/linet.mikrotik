@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2018-07-02T22:11:10Z</date>
+    <date>2019-06-30T11:55:49Z</date>
     <groups>
         <group>
             <name>Custom Templates</name>
@@ -701,6 +701,24 @@
             <screens/>
         </template>
     </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Mikrotik Radius Counters:mikrotik.radius-in.coa[requests].avg(1800)}&lt;0.5</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Too few Radius CoA Requests from {HOSTNAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>3</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+    </triggers>
     <graphs>
         <graph>
             <name>Radius CoA: Requests</name>

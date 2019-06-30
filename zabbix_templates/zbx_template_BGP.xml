@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2018-07-26T15:58:29Z</date>
+    <date>2019-06-30T11:56:50Z</date>
     <groups>
         <group>
             <name>Custom Templates</name>
@@ -560,6 +560,11 @@
                                     <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},disabled].last(0)}=0 and {Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},state].last(#3)}&lt;&gt;6</expression>
                                     <recovery_expression/>
                                 </dependency>
+                                <dependency>
+                                    <name>BGP Peer {#PEERNAME} is lost more than 20% of prefixes on {HOST.NAME}</name>
+                                    <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].last()}&lt;0.8*{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].avg(10800)}</expression>
+                                    <recovery_expression/>
+                                </dependency>
                             </dependencies>
                             <tags/>
                         </trigger_prototype>
@@ -578,8 +583,13 @@
                             <manual_close>0</manual_close>
                             <dependencies>
                                 <dependency>
-                                    <name>BGP Peer {#PEERNAME} is lost more than 10% of prefixes on {HOST.NAME}</name>
-                                    <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].last()}&lt;0.9*{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].avg(10800)}</expression>
+                                    <name>BGP Peer {#PEERNAME} is DOWN</name>
+                                    <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},disabled].last(0)}=0 and {Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},state].last(#3)}&lt;&gt;6</expression>
+                                    <recovery_expression/>
+                                </dependency>
+                                <dependency>
+                                    <name>BGP Peer {#PEERNAME} is lost more than 30% of prefixes on {HOST.NAME}</name>
+                                    <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].last()}&lt;0.7*{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].avg(10800)}</expression>
                                     <recovery_expression/>
                                 </dependency>
                             </dependencies>
@@ -600,8 +610,8 @@
                             <manual_close>0</manual_close>
                             <dependencies>
                                 <dependency>
-                                    <name>BGP Peer {#PEERNAME} is lost more than 20% of prefixes on {HOST.NAME}</name>
-                                    <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].last()}&lt;0.8*{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},prefix-count].avg(10800)}</expression>
+                                    <name>BGP Peer {#PEERNAME} is DOWN</name>
+                                    <expression>{Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},disabled].last(0)}=0 and {Template Mikrotik BGPv4:mikrotik.bgp.node[{#PEERNAME},state].last(#3)}&lt;&gt;6</expression>
                                     <recovery_expression/>
                                 </dependency>
                             </dependencies>
