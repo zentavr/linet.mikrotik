@@ -4,7 +4,7 @@ The idea and the code mainly had been found at https://copyninja.info/blog/dynam
 
 """
 import re
-import types
+
 
 def zabbix_escape(st):
     """
@@ -21,7 +21,9 @@ def zabbix_escape(st):
     # + Linefeed escape sequences(\n) are supported in quoted strings.
     # + Linefeed escape sequences are trimmed from the end of an entry.
 
-    if isinstance(st, (types.StringType, types.UnicodeType, types.BufferType)):
+    #> https://www.cmi.ac.in/~madhavan/courses/python-2011/docs/diveintopython3/porting-code-to-python-3-with-2to3.html#types
+    # (types.StringType, types.UnicodeType, types.BufferType) => (bytes, str, memoryview)
+    if isinstance(st, (bytes, str, memoryview)):
         st = re.sub(r'(\"|\\)',
                     lambda m: {
                          '\"': '\\"',

@@ -7,7 +7,7 @@ from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns IRQ Counters
     :param api: initialized librouteros' connect()
@@ -24,9 +24,9 @@ def run(api, ts=False, log=getLogger(__name__)):
     irqstats = api(cmd='/system/resource/irq/print')
 
     for irqitem in irqstats:
-        print "{host} \"{key}\"{unixtime}{value}".format(
+        print("{host} \"{key}\"{unixtime}{value}".format(
             host='-',
             key='mikrotik.irq[' + irqitem.get('users').replace(",", "__") + ']',
             unixtime=unixtime,
             value=zabbix_escape(irqitem['count'])
-        )
+        ))

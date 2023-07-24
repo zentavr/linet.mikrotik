@@ -9,12 +9,11 @@ This module pokes Mikrotik for Firewall Counters
 import time
 import pprint
 
-from string import strip
 from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns firewall counters
     :param api: initialized librouteros' connect()
@@ -85,13 +84,13 @@ def run(api, ts=False, log=getLogger(__name__)):
 
             log.info(pp.pformat(comment))
             for metric in metrics_to_monitor:
-                print "{host} \"{key}\"{unixtime}{value}".format(
+                print("{host} \"{key}\"{unixtime}{value}".format(
                     host='-',
                     key='mikrotik.firewall[{table}_{id},{metric}]'.format(
                         table=t,
-                        id=strip(rule.get('.id'), '*'),
+                        id=rule.get('.id').strip('*'),
                         metric=metric
                     ),
                     unixtime=unixtime,
                     value=zabbix_escape(rule.get(metric))
-                )
+                ))

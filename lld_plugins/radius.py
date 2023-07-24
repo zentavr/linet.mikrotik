@@ -4,12 +4,11 @@ This module pokes Mikrotik for Radius Servers
 """
 import json
 import time
-from string import strip
 from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns Radius LLD JSON
     :param api: initialized librouteros' connect()
@@ -30,7 +29,7 @@ def run(api, ts=False, log=getLogger(__name__)):
     for s in radservers:
         servers.append(
             {
-                '{#MTIK_RADIUS_ID}': strip(s.get('.id'), '*'),
+                '{#MTIK_RADIUS_ID}': s.get('.id').strip('*'),
                 '{#MTIK_RADIUS_COMMENT}': s.get('comment', s.get('.id')),
                 '{#MTIK_RADIUS_ADDRESS}': s.get('address'),
             }
@@ -42,9 +41,9 @@ def run(api, ts=False, log=getLogger(__name__)):
     }
 
     # Return JSON
-    print "{host} {key}{unixtime}{value}".format(
+    print("{host} {key}{unixtime}{value}".format(
         host='-',
         key='mikrotik.radius-out.discovery',
         unixtime=unixtime,
         value=zabbix_escape(json.dumps(json_data))
-    )
+    ))

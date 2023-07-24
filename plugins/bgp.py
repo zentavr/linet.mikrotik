@@ -8,7 +8,7 @@ from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns BGP Counters
     :param api: initialized librouteros' connect()
@@ -22,7 +22,10 @@ def run(api, ts=False, log=getLogger(__name__)):
     else:
         unixtime = " "
 
-    bgpstats = api(cmd='/routing/bgp/peer/print')
+    if ver.startswith('7.'):
+        bgpstats = api(cmd='/routing/bgp/connection/print')
+    else:
+        bgpstats = api(cmd='/routing/bgp/peer/print')
 
     # The list of BGP values to monitor
     values_to_monitor = [
@@ -39,7 +42,7 @@ def run(api, ts=False, log=getLogger(__name__)):
 
     for bgpitem in bgpstats:
         for val in values_to_monitor:
-            print "{host} \"{key}\"{unixtime}{value}".format(
+            print("{host} \"{key}\"{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.bgp.node[{name},{val}]'.format(
                     name=bgpitem['name'],
@@ -47,7 +50,7 @@ def run(api, ts=False, log=getLogger(__name__)):
                 ),
                 unixtime=unixtime,
                 value=zabbix_escape(bgpitem.get(val, 0))
-            )
+            ))
 
         state = bgpitem.get('state', 'disabled')
         uptime = bgpitem.get('uptime', '0s')
@@ -68,17 +71,17 @@ def run(api, ts=False, log=getLogger(__name__)):
         else:
             bgp_state = 0
 
-        print "{host} \"{key}\"{unixtime}{value}".format(
+        print("{host} \"{key}\"{unixtime}{value}".format(
             host='-',
             key='mikrotik.bgp.node[{name},state]'.format(
                 name=bgpitem['name']
             ),
             unixtime=unixtime,
             value=zabbix_escape(bgp_state)
-        )
+        ))
 
         # Established time for peer
-        print "{host} \"{key}\"{unixtime}{value}".format(
+        print("{host} \"{key}\"{unixtime}{value}".format(
             host='-',
             key='mikrotik.bgp.node[{name},uptime]'.format(
                 name=bgpitem['name']
@@ -86,4 +89,4 @@ def run(api, ts=False, log=getLogger(__name__)):
             unixtime=unixtime,
             # value=bgpitem['uptime']
             value=zabbix_escape(time_convert(uptime))
-        )
+        ))

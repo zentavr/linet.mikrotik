@@ -8,7 +8,7 @@ from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns BGP LLD JSON
     :param api: initialized librouteros' connect()
@@ -22,7 +22,10 @@ def run(api, ts=False, log=getLogger(__name__)):
     else:
         unixtime = " "
 
-    bgpstats = api(cmd='/routing/bgp/peer/print')
+    if ver.startswith('7.'):
+        bgpstats = api(cmd='/routing/bgp/connection/print')
+    else:
+        bgpstats = api(cmd='/routing/bgp/peer/print')
 
     peers = []
 
@@ -44,9 +47,9 @@ def run(api, ts=False, log=getLogger(__name__)):
     }
 
     # Return JSON
-    print "{host} {key}{unixtime}{value}".format(
+    print("{host} {key}{unixtime}{value}".format(
         host='-',
         key='mikrotik.bgp.discovery',
         unixtime=unixtime,
         value=zabbix_escape(json.dumps(json_data))
-    )
+    ))

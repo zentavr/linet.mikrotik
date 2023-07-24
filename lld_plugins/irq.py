@@ -8,7 +8,7 @@ from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns IRQ LLD JSON
     :param api: initialized librouteros' connect()
@@ -39,9 +39,9 @@ def run(api, ts=False, log=getLogger(__name__)):
     }
 
     # Return JSON
-    print "{host} {key}{unixtime}{value}".format(
+    print("{host} {key}{unixtime}{value}".format(
         host='-',
         key='mikrotik.irq.discovery',
         unixtime=unixtime,
         value=zabbix_escape(json.dumps(json_data))
-    )
+    ))

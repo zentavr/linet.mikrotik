@@ -5,12 +5,11 @@ This module pokes Mikrotik for Firewall Rules
 import json
 import time
 import pprint
-from string import strip
 from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns Firewall Rules LLD JSON
     :param api: initialized librouteros' connect()
@@ -58,7 +57,7 @@ def run(api, ts=False, log=getLogger(__name__)):
 
             lld.append(
                 {
-                    '{#MTIK_FW_RULE_ID}': t + '_' + strip(rule.get('.id'), '*'),
+                    '{#MTIK_FW_RULE_ID}': t + '_' + rule.get('.id').strip('*'),
                     '{#MTIK_FW_RULE_COMMENT}': rule.get('comment', rule.get('.id'))
                 }
             )
@@ -69,9 +68,9 @@ def run(api, ts=False, log=getLogger(__name__)):
     }
 
     # Return JSON
-    print "{host} {key}{unixtime}{value}".format(
+    print("{host} {key}{unixtime}{value}".format(
         host='-',
         key='mikrotik.firewall.discovery',
         unixtime=unixtime,
         value=zabbix_escape(json.dumps(json_data))
-    )
+    ))

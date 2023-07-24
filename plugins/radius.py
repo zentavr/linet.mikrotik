@@ -5,12 +5,11 @@ This module pokes Mikrotik for Radius Counters
 import time
 # import pprint
 
-from string import strip
 from libs.strings import zabbix_escape
 from logging import getLogger
 
 
-def run(api, ts=False, log=getLogger(__name__)):
+def run(api, ts=False, log=getLogger(__name__), ver=''):
     """
     Returns Radius Counters
     :param api: initialized librouteros' connect()
@@ -38,14 +37,14 @@ def run(api, ts=False, log=getLogger(__name__)):
 
     for coaitem in coastats:
         for val in coa_values_to_monitor:
-            print "{host} \"{key}\"{unixtime}{value}".format(
+            print("{host} \"{key}\"{unixtime}{value}".format(
                 host='-',
                 key='mikrotik.radius-in.coa[{val}]'.format(
                     val=val
                 ),
                 unixtime=unixtime,
                 value=zabbix_escape(coaitem.get(val, 0))
-            )
+            ))
 
     # We need to figure out which Radius settings do we have
     radservers = api(cmd='/radius/print')
@@ -72,9 +71,9 @@ def run(api, ts=False, log=getLogger(__name__)):
 
         for item in stats:
             for val in radius_values_to_monitor:
-                print "{host} \"{key}\"{unixtime}{value}".format(
+                print("{host} \"{key}\"{unixtime}{value}".format(
                     host='-',
-                    key='mikrotik.radius-out.node[' + strip(server.get('.id'), '*') + ',' + val + ']',
+                    key='mikrotik.radius-out.node[' + server.get('.id').strip('*') + ',' + val + ']',
                     unixtime=unixtime,
                     value=zabbix_escape(item.get(val))
-                )
+                ))

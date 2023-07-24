@@ -5,11 +5,12 @@ import ssl
 import os
 import logging
 from sys import stdout, stdin, stderr
-# import pprint
+import re
+#import pprint
 
 from librouteros import connect
 from libs.loadplugins import load_plugins
-from librouteros.login import login_plain, login_token
+from librouteros.login import plain, token
 
 
 def main():
@@ -25,8 +26,8 @@ def main():
     parser.add_argument('-P', '--plugins', dest='plugins', default='plugins', help='The folder related to this file '
                                                                                    'where to seek for the plugins')
     parser.add_argument('-m', '--login-method', dest='login_method', default='login_plain',
-                        choices=['login_plain', 'login_token'], help='Mikrotik login method to use. login_plain for '
-                        'fw>=6.43, login_token for fw<6.43.')
+                        choices=['plain', 'token'], help='Mikrotik login method to use. "plain" for '
+                        'firmware>=6.43, "token" for firmware<6.43.')
     parser.add_argument("-v", "--verbosity", action="count", dest='verbosity', help="increase output verbosity")
 
     args = parser.parse_args()
@@ -86,11 +87,20 @@ def main():
 
     # pp = pprint.PrettyPrinter(indent=4)
 
+    resources = api(cmd='/system/resource/print')
+    firmware_version = ''
+    firmware_re = re.compile(r'^(?P<version>\d+\.\d+\.\d+)')
+    for r in resources:
+        version_raw = r['version']
+        match = firmware_re.match(version_raw)
+        if match:
+            firmware_version = match.group('version')
+
     # Dynamically import the modules
     modules = load_plugins(os.path.dirname(__file__), args.plugins)
     for m in modules:
         # pp.pprint(m)
-        m.run(api, args.use_timestamps, applog)
+        m.run(api, args.use_timestamps, applog, firmware_version)
 
     # Closing Mikrotik's API Session
     api.close()

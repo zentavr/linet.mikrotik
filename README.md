@@ -6,13 +6,13 @@ The reason is why this code was born is that Mikrotik's vendor does not hurry wi
 certain interesting counters. When **Linet LTD** started to migrate to Mikrotiks - they missed an opportunity to monitor
 the health of their NAS in many ways like they did before.
 
-Currently we monitor the next:
+Currently, we monitor the next:
 
 *  [radius.py](plugins/radius.py): Radius CoA counters: `/radius incoming monitor`
 *  [radius.py](plugins/radius.py): Radius Client counters: `/radius monitor`
 *  [bgp.py](plugins/bgp.py): BGP Peer Counters: `/routing bgp peer print status`
 *  [irq.py](plugins/irq.py): System IRQ Counters: `/system resource irq print`
-*  [firrwall.py](plugins/firewall.py): Firewall Counters `/ip firewall <table> print stats`
+*  [firewall.py](plugins/firewall.py): Firewall Counters `/ip firewall <table> print stats`
 
 ## Installation
 
@@ -110,20 +110,15 @@ The next templates are available:
 
 ### Installation on Zabbix Server
 
-The code uses Python 2 (tested in 2.7.13). All the dependencies are listed in [requirements.txt](requirements.txt) file.
-Very likely you will use *Virtualenv* for the installation. I used `/etc/zabbix/.venv` as a viartualenv directory.
+The code uses Python 3 (tested in 3.11.3). All the dependencies are listed in [requirements.txt](requirements.txt) file.
+Very likely you will use *Virtualenv* for the installation. I used `/etc/zabbix/.venv` as a virtualenv directory.
 
 As usual, everything which is in `/etc/zabbix/zabbix_agentd.d` gets included by `zabbix_agentd`. Put or symlink 
 [userparameter_mikrotik_getdata.conf](zabbix_agentd.d/userparameter_mikrotik_getdata.conf) to something in 
 `/etc/zabbix/zabbix_agentd.d` in order to start.
 
 #### Known Issues
-*  It doesn't work on Python 2.7.6 which is in Ubuntu 14.04 LTS. As a solution was to take an idea in 
-    [this article][Upgrade to Python 2.7.11 on Ubuntu], compile Python 2.7.13 and create the `virtualenv`. 
-    Also, these commands had been used in virtualenv as well:
-    
-        pip install -U setuptools
-        pip install -U pip
+*  Python2 support was removed
 
 ## Hints
 
