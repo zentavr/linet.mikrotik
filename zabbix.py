@@ -6,7 +6,7 @@ import os
 import logging
 from sys import stdout, stdin, stderr
 import re
-#import pprint
+import pprint
 
 from librouteros import connect
 from libs.loadplugins import load_plugins
@@ -14,7 +14,9 @@ from librouteros.login import plain, token
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Zabbix Helper')
+    parser = argparse.ArgumentParser(
+        prog='zabbix-helper',
+        description='Zabbix Helper')
     parser.add_argument('-H', '--hostname', default='', dest='hostname', help='API Hostname.')
     parser.add_argument('-e', '--encoding', default='ASCII', dest='encoding',
                         help='The encoding to use during the connect')
@@ -23,12 +25,13 @@ def main():
     parser.add_argument('-s', '--ssl', dest='use_ssl', action='store_true', help='Use SSL.')
     parser.add_argument('-t', '--timestamps', dest='use_timestamps', action='store_true',
                         help='Use unixtime timestamps.')
-    parser.add_argument('-P', '--plugins', dest='plugins', default='plugins', help='The folder related to this file '
-                                                                                   'where to seek for the plugins')
-    parser.add_argument('-m', '--login-method', dest='login_method', default='login_plain',
+    parser.add_argument('-P', '--plugins', dest='plugins', default='plugins',
+                        help='The folder related to this file where to seek for the plugins')
+    parser.add_argument('-m', '--login-method', dest='login_method', default='plain',
                         choices=['plain', 'token'], help='Mikrotik login method to use. "plain" for '
                         'firmware>=6.43, "token" for firmware<6.43.')
-    parser.add_argument("-v", "--verbosity", action="count", dest='verbosity', help="increase output verbosity")
+    parser.add_argument("-v", "--verbosity", action="count", dest='verbosity', default=0,
+                        help="increase output verbosity")
 
     args = parser.parse_args()
 
@@ -73,6 +76,11 @@ def main():
         connect_args.update(ssl_wrapper=ssl_wrapper)
 
     # Dynamically init the class (we expect login_plain() or login_token() here)
+    if args.verbosity is not None and args.verbosity > 3:
+        pprint.pprint(args)
+    applog.debug("LibrouterOS logging method: {method}".format(
+        method=args.login_method
+    ))
     method = globals()[args.login_method]
     login_methods = (method, )
 
@@ -89,12 +97,26 @@ def main():
 
     resources = api(cmd='/system/resource/print')
     firmware_version = ''
-    firmware_re = re.compile(r'^(?P<version>\d+\.\d+\.\d+)')
+    # i.e.: 6.49.2 (stable)
+    firmware_re_long = re.compile(r'^(?P<version>\d+\.\d+\.\d+)')
+    # i.e.: 7.12 (stable)
+    firmware_re_short = re.compile(r'^(?P<version>\d+\.\d+)')
     for r in resources:
         version_raw = r['version']
-        match = firmware_re.match(version_raw)
-        if match:
-            firmware_version = match.group('version')
+        applog.debug("RouterOS raw version: {raw}".format(
+            raw=version_raw
+        ))
+        match_long = firmware_re_long.match(version_raw)
+        match_short = firmware_re_short.match(version_raw)
+        if match_long:
+            firmware_version = match_long.group('version')
+        elif match_short:
+            firmware_version = match_short.group('version')
+        else:
+            applog.error("Cannot detect RouterOS version")
+    applog.debug("RouterOS version is {ver}".format(
+        ver=firmware_version
+    ))
 
     # Dynamically import the modules
     modules = load_plugins(os.path.dirname(__file__), args.plugins)

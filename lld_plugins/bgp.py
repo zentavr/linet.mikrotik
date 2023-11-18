@@ -22,24 +22,35 @@ def run(api, ts=False, log=getLogger(__name__), ver=''):
     else:
         unixtime = " "
 
-    if ver.startswith('7.'):
-        bgpstats = api(cmd='/routing/bgp/connection/print')
-    else:
-        bgpstats = api(cmd='/routing/bgp/peer/print')
-
     peers = []
 
-    for bgpitem in bgpstats:
-        peers.append(
-            {
-                '{#PEERNAME}': bgpitem.get('name'),
-                '{#PEERCOMMENT}': bgpitem.get('comment', ''),
-                '{#PEERAS}': bgpitem.get('remote-as'),
-                '{#PEERLOCALADDR}': bgpitem.get('local-address'),
-                '{#PEERREMOTEADDR}': bgpitem.get('remote-address'),
-                '{#PEERREMOTEID}': bgpitem.get('remote-id'),
-            }
-        )
+    if ver.startswith('7.'):
+        bgpstats = api(cmd='/routing/bgp/connection/print')
+        for bgpitem in bgpstats:
+            peers.append(
+                {
+                    '{#PEERNAME}': bgpitem.get('name'),
+                    #'{#PEERCOMMENT}': bgpitem.get('comment', ''),
+                    '{#PEERAS}': bgpitem.get('remote.as'),
+                    '{#PEERLOCALADDR}': bgpitem.get('local.address'),
+                    '{#PEERREMOTEADDR}': bgpitem.get('remote.address'),
+                    '{#PEERREMOTEID}': bgpitem.get('remote.id'),
+                }
+            )
+
+    else:
+        bgpstats = api(cmd='/routing/bgp/peer/print')
+        for bgpitem in bgpstats:
+            peers.append(
+                {
+                    '{#PEERNAME}': bgpitem.get('name'),
+                    '{#PEERCOMMENT}': bgpitem.get('comment', ''),
+                    '{#PEERAS}': bgpitem.get('remote-as'),
+                    '{#PEERLOCALADDR}': bgpitem.get('local-address'),
+                    '{#PEERREMOTEADDR}': bgpitem.get('remote-address'),
+                    '{#PEERREMOTEID}': bgpitem.get('remote-id'),
+                }
+            )
 
     # Composing JSON to return
     json_data = {
