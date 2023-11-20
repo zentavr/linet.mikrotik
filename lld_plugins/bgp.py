@@ -25,7 +25,7 @@ def run(api, ts=False, log=getLogger(__name__), ver=''):
     peers = []
 
     if ver.startswith('7.'):
-        bgpstats = api(cmd='/routing/bgp/connection/print')
+        bgpstats = api(cmd='/routing/bgp/peer/print')
         for bgpitem in bgpstats:
             peers.append(
                 {
